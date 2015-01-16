@@ -60,7 +60,7 @@ public class PE_Obj2D : MonoBehaviour {
 
 				//Vector2 overlap = Vector2.zero;
 				thatP = that.transform.position;
-				//delta = pos1 - thatP;
+				delta = pos1 - thatP;
 				if (delta.x >= 0 && delta.y >= 0) { // Top, Right
 					// Get the edges that we're concerned with
 					eX0 = pos0.x - this.transform.lossyScale.x / 2;
@@ -107,11 +107,9 @@ public class PE_Obj2D : MonoBehaviour {
 					eX2 = thatP.x + that.transform.lossyScale.x / 2 ;
 					eY2 = thatP.y - that.transform.lossyScale.y / 2 ;
 
-					float mThis = (eY0-eY1)/(eX0-eX1);
-					float mThat = (eY0-eY2)/(eX0-eX2);
-					print (eY1); print (eY2);
+					//print (eY1); print (eY2);
 					//if ((mThis > mThat) || ((eX0 == eX1) && (Mathf.Abs (mThat) <= 0.1) && (eX0 != eX2))) {// hit the bottom
-					if ((Mathf.Abs(eY1 - eY2) <= 0.1)) {// hit the bottom
+					if ((Mathf.Abs(eY1 - eY2) <= 0.1) && (Mathf.Abs(eX1 - eX2) >= 0.3)) {// hit the bottom
 						float dist = this.transform.lossyScale.y/2 + that.transform.lossyScale.y/2;
 						vel.y = 0;
 						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist);
@@ -131,8 +129,8 @@ public class PE_Obj2D : MonoBehaviour {
 					eY1 = pos1.y + this.transform.lossyScale.y / 2;
 					eX2 = thatP.x - that.transform.lossyScale.x / 2 ;
 					eY2 = thatP.y - that.transform.lossyScale.y / 2 ;
-					print (eY1); print (eY2);
-					if ((Mathf.Abs(eY1 - eY2) <= 0.1)) {// hit the bottom
+
+					if ((Mathf.Abs(eY1 - eY2) <= 0.1) && (Mathf.Abs(eX1 - eX2) >= 0.3)) {// hit the bottom
 						float dist = this.transform.lossyScale.y/2 + that.transform.lossyScale.y/2;
 						vel.y = 0;
 						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist);
