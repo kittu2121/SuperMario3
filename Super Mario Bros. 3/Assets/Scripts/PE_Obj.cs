@@ -91,43 +91,108 @@ public class PE_Obj : MonoBehaviour {
 					eX2 = thatP.x + that.transform.lossyScale.x / 2 ;
 					eY2 = thatP.y + that.transform.lossyScale.y / 2 ;
 
+					float mThis = (eY0-eY1)/(eX0-eX1);
+					float mThat = (eY0-eY2)/(eX0-eX2);
 
+					if ((mThis < mThat) || ((eX0 == eX1) && (mThat <= 0) && (eX0 != eX2))) {// land on top
+						float dist = this.transform.lossyScale.y/2 + that.transform.lossyScale.y/2;
+						vel.y = 0;
+						Vector3 pos = new Vector3(this.transform.position.x, that.transform.position.y + dist, this.transform.position.z);
+						this.transform.position = pos;
+					}
+					else { // hit the right side
+						float dist = this.transform.lossyScale.x/2 + that.transform.lossyScale.x/2;
+						vel.x = 0;
+						Vector3 pos = new Vector3(that.transform.position.x + dist, this.transform.position.y, this.transform.position.z);
+						this.transform.position = pos;
+					}
 					// Distance traveled this step
-					dX = eX1-eX0;
-					dY = eY1-eY0;
-					float uX = 1;
-					float uY = 1;
-					if (eX1 < eX2) { // Overlap in X direction
-						uX = 1 - (eX2-eX1) / (eX0-eX1);
-					}
-					if (eY1 < eY2) { // Overlap in Y direction
-						uY = 1 - (eY2-eY1) / (eY0-eY1);
-					}
+//					dX = eX1-eX0;
+//					dY = eY1-eY0;
+//					float uX = 1;
+//					float uY = 1;
+//					if (eX1 < eX2) { // Overlap in X direction
+//						uX = 1 - (eX2-eX1) / (eX0-eX1);
+//						
+//					}
+//					if (eY1 < eY2) { // Overlap in Y direction
+//						uY = 1 - (eY2-eY1) / (eY0-eY1);
+//						
+//					}
 					// Find Overlaps (positive is an overlap, negative 
 					// overlap.x = 
 
 				} else if (delta.x >= 0 && delta.y < 0) { // Bottom, Right
-
+					eX0 = pos0.x - this.transform.lossyScale.x / 2;
+					eY0 = pos0.y + this.transform.lossyScale.y / 2;
+					eX1 = pos1.x - this.transform.lossyScale.x / 2;
+					eY1 = pos1.y + this.transform.lossyScale.y / 2;
+					eX2 = thatP.x + that.transform.lossyScale.x / 2 ;
+					eY2 = thatP.y - that.transform.lossyScale.y / 2 ;
+					
+					float mThis = (eY0-eY1)/(eX0-eX1);
+					float mThat = (eY0-eY2)/(eX0-eX2);
+					
+					if ((mThis > mThat) || ((eX0 == eX1) && (mThat >= 0) && (eX0 != eX2))) {// hit the bottom
+						float dist = this.transform.lossyScale.y/2 + that.transform.lossyScale.y/2;
+						vel.y = 0;
+						Vector3 pos = new Vector3(this.transform.position.x, that.transform.position.y - dist, this.transform.position.z);
+						this.transform.position = pos;
+					}
+					else { // hit the right side
+						float dist = this.transform.lossyScale.x/2 + that.transform.lossyScale.x/2;
+						vel.x = 0;
+						Vector3 pos = new Vector3(that.transform.position.x + dist, this.transform.position.y, this.transform.position.z);
+						this.transform.position = pos;
+					}
 				} else if (delta.x < 0 && delta.y < 0) { // Bottom, Left
-
+					eX0 = pos0.x + this.transform.lossyScale.x / 2;
+					eY0 = pos0.y + this.transform.lossyScale.y / 2;
+					eX1 = pos1.x + this.transform.lossyScale.x / 2;
+					eY1 = pos1.y + this.transform.lossyScale.y / 2;
+					eX2 = thatP.x - that.transform.lossyScale.x / 2 ;
+					eY2 = thatP.y - that.transform.lossyScale.y / 2 ;
+					
+					float mThis = (eY0-eY1)/(eX0-eX1);
+					float mThat = (eY0-eY2)/(eX0-eX2);
+					
+					if ((mThis < mThat) || ((eX0 == eX1) && (mThat <= 0) && (eX0 != eX2))) {// hit the bottom
+						float dist = this.transform.lossyScale.y/2 + that.transform.lossyScale.y/2;
+						vel.y = 0;
+						Vector3 pos = new Vector3(this.transform.position.x, that.transform.position.y - dist, this.transform.position.z);
+						this.transform.position = pos;
+					}
+					else { // hit the left side
+						float dist = this.transform.lossyScale.x/2 + that.transform.lossyScale.x/2;
+						vel.x = 0;
+						Vector3 pos = new Vector3(that.transform.position.x - dist, this.transform.position.y, this.transform.position.z);
+						this.transform.position = pos;
+					}
 				} else if (delta.x < 0 && delta.y >= 0) { // Top, Left
-
+					eX0 = pos0.x + this.transform.lossyScale.x / 2;
+					eY0 = pos0.y - this.transform.lossyScale.y / 2;
+					eX1 = pos1.x + this.transform.lossyScale.x / 2;
+					eY1 = pos1.y - this.transform.lossyScale.y / 2;
+					eX2 = thatP.x - that.transform.lossyScale.x / 2 ;
+					eY2 = thatP.y + that.transform.lossyScale.y / 2 ;
+					
+					float mThis = (eY0-eY1)/(eX0-eX1);
+					float mThat = (eY0-eY2)/(eX0-eX2);
+					
+					if ((mThis > mThat) || ((eX0 == eX1) && (mThat <= 0) && (eX0 != eX2))) {// land on top
+						float dist = this.transform.lossyScale.y/2 + that.transform.lossyScale.y/2;
+						vel.y = 0;
+						Vector3 pos = new Vector3(this.transform.position.x, that.transform.position.y + dist, this.transform.position.z);
+						this.transform.position = pos;
+					}
+					else { // hit the left side
+						float dist = this.transform.lossyScale.x/2 + that.transform.lossyScale.x/2;
+						vel.x = 0;
+						Vector3 pos = new Vector3(that.transform.position.x - dist, this.transform.position.y, this.transform.position.z);
+						this.transform.position = pos;
+					}
 				}
 
-				float thisD, thatD, dist;
-
-				thisD = this.transform.lossyScale.y/2;
-				thatD = that.transform.lossyScale.y/2;
-				
-				dist = thisD + thatD;
-
-				vel.y = 0;
-				//delta = pos1 - that.transform.position;
-				//delta.Normalize();
-				// delta.y *= dist;
-
-				Vector3 pos = new Vector3(this.transform.position.x, that.transform.position.y + dist, this.transform.position.z);
-				this.transform.position = pos;// new Vector3(this.transform.position.x, this.transform.position.y + delta.y, this.transform.position.z);
 
 				break;
 			}
