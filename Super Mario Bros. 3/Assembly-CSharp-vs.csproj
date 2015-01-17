@@ -46,6 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Coin.cs" />
+     <Compile Include="Assets\Jump.cs" />
      <Compile Include="Assets\Scripts\ManagerScript.cs" />
      <Compile Include="Assets\Scripts\PE_Obj.cs" />
      <Compile Include="Assets\Scripts\PE_Obj2D.cs" />
