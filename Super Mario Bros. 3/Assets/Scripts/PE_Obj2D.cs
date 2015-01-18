@@ -5,7 +5,6 @@ using System.Collections;
 
 public class PE_Obj2D : MonoBehaviour {
 	public bool			still = false;
-	public bool			collOnSide = false;
 	public PE_Collider2D	coll = PE_Collider2D.aabb;
 	public PE_GravType2D	grav = PE_GravType2D.constant;
 	
@@ -18,8 +17,12 @@ public class PE_Obj2D : MonoBehaviour {
 	public Vector2		thatP = Vector2.zero;
 	public Vector2		delta = Vector2.zero;
 	// public GameObject Block_empty;
-
+	private bool blockhit = false;
+	private Animator block_anim;
 	void Start() {
+		if (this.gameObject.tag == "Block_item") {
+			block_anim = this.gameObject.GetComponentInParent<Animator>();
+		}
 		if (PhysEngine2D.objs.IndexOf(this) == -1) {
 			PhysEngine2D.objs.Add(this);
 		}
@@ -44,149 +47,153 @@ public class PE_Obj2D : MonoBehaviour {
 	void OnTriggerStay2D(Collider2D other) {
 		OnTriggerEnter2D(other);
 	}
-
-	void OnTriggerExit2D(Collider2D other) {
-		// if (Mathf.Abs (this.transform.position.x - other.transform.position.x) > other.collider2D.bounds.size.x/2)
-		collOnSide = false;
-	}
+	
 	void ResolveCollisionWith(PE_Obj2D that) {
 		// Assumes that "that" is still
+		if (that.gameObject.tag != "Player") {
+			switch (this.coll) {
 
-		switch (this.coll) {
-
-		case PE_Collider2D.aabb:
-
-			switch (that.coll) {
 			case PE_Collider2D.aabb:
 
-				// AABB / AABB collision
-				float eX1, eY1, eX2, eY2, eX0, eY0;
+				switch (that.coll) {
+				case PE_Collider2D.aabb:
 
-				//Vector2 overlap = Vector2.zero;
-				thatP = that.transform.position;
-				delta = pos1 - thatP;
-				if ((this.transform.position.x <= thatP.x + that.collider2D.bounds.size.x/2 ) &&
-				    (this.transform.position.x >= thatP.x - that.collider2D.bounds.size.x/2 )) { // if the center of this obj is between the x-bounds of that obj
+					// AABB / AABB collision
+					float eX1, eY1, eX2, eY2, eX0, eY0;
 
-					if (pos1.y >= thatP.y) { // land on top
-						float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
-						vel.y = 0;
-						acc.y = 0;
-						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist+0.01f);
-						this.transform.position = pos;
+					//Vector2 overlap = Vector2.zero;
+					thatP = that.transform.position;
+					delta = pos1 - thatP;
+					if ((this.transform.position.x <= thatP.x + that.collider2D.bounds.size.x/2 ) &&
+					    (this.transform.position.x >= thatP.x - that.collider2D.bounds.size.x/2 )) { // if the center of this obj is between the x-bounds of that obj
+
+						if (pos1.y >= thatP.y) { // land on top
+							float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
+							vel.y = 0;
+							acc.y = 0;
+							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist+0.01f);
+							this.transform.position = pos;
+						}
+						else { // hit the bottom
+							float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
+							vel.y = 0;
+							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist-0.03f);
+							this.transform.position = pos;
+	//						if (that.gameObject.tag == "Block_item") {
+	//							Instantiate (Block_empty, that.transform.position, that.transform.rotation);
+	//							Destroy(that.gameObject);
+	//						}
+						}
 					}
-					else { // hit the bottom
-						float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
-						vel.y = 0;
-						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist-0.03f);
-						this.transform.position = pos;
-//						if (that.gameObject.tag == "Block_item") {
-//							Instantiate (Block_empty, that.transform.position, that.transform.rotation);
-//							Destroy(that.gameObject);
-//						}
+
+					else if (delta.x >= 0 && delta.y >= 0) { // Top, Right
+						// Get the edges that we're concerned with
+						eX0 = pos0.x - this.collider2D.bounds.size.x / 2; // prev Left side of object.
+						eY0 = pos0.y - this.collider2D.bounds.size.y / 2; // prev bottom side
+						eX1 = pos1.x - this.collider2D.bounds.size.x / 2; // current right side
+						eY1 = pos1.y - this.collider2D.bounds.size.y / 2; // current bottom side
+						eX2 = thatP.x + that.collider2D.bounds.size.x / 2 ; // other object's right side 
+						eY2 = thatP.y + that.collider2D.bounds.size.y / 2 ; // other object's  top side.
+						if ((Mathf.Abs(eY0 - eY2) <= 0.1)) {// land on top
+							float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
+							vel.y = 0;
+							acc.y = 0;
+							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist + 0.01f);
+							this.transform.position = pos;
+						}
+						else if (this.gameObject.tag != "Enemy") { // hit the right side
+							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
+							vel.x = 0;
+							acc.x = 0;
+							Vector2 pos = new Vector2(that.transform.position.x + dist + 0.1f, this.transform.position.y);
+							this.transform.position = pos;
+						}
+
+					} else if (delta.x >= 0 && delta.y < 0) { // Bottom, Right
+						eX0 = pos0.x - this.collider2D.bounds.size.x / 2;
+						eY0 = pos0.y + this.collider2D.bounds.size.y / 2;
+						eX1 = pos1.x - this.collider2D.bounds.size.x / 2;
+						eY1 = pos1.y + this.collider2D.bounds.size.y / 2;
+						eX2 = thatP.x + that.collider2D.bounds.size.x / 2 ;
+						eY2 = thatP.y - that.collider2D.bounds.size.y / 2 ;
+
+						if ((Mathf.Abs(eY1 - eY2) <= 0.1) && (Mathf.Abs(eX1 - eX2) >= 0.4)) {// hit the bottom
+							float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
+							vel.y = 0;
+							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist - 0.03f);
+							this.transform.position = pos;
+						}
+						else if (this.gameObject.tag != "Enemy") { // hit the right side
+							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
+							vel.x = 0;
+							acc.x = 0;
+							Vector2 pos = new Vector2(that.transform.position.x + dist + 0.06f, this.transform.position.y);
+							this.transform.position = pos;
+						}
+					} else if (delta.x < 0 && delta.y < 0) { // Bottom, Left
+						eX0 = pos0.x + this.collider2D.bounds.size.x / 2;
+						eY0 = pos0.y + this.collider2D.bounds.size.y / 2;
+						eX1 = pos1.x + this.collider2D.bounds.size.x / 2;
+						eY1 = pos1.y + this.collider2D.bounds.size.y / 2;
+						eX2 = thatP.x - that.collider2D.bounds.size.x / 2 ;
+						eY2 = thatP.y - that.collider2D.bounds.size.y / 2 ;
+
+						if ((Mathf.Abs(eY1 - eY2) <= 0.1) && (Mathf.Abs(eX1 - eX2) >= 0.4)) {// hit the bottom
+							float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
+							vel.y = 0;
+							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist - 0.03f);
+							this.transform.position = pos;
+						}
+						else if (this.gameObject.tag != "Enemy") { // hit the left side
+							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
+							vel.x = 0;
+							acc.x = 0;
+							Vector2 pos = new Vector2(that.transform.position.x - dist - 0.06f, this.transform.position.y);
+							this.transform.position = pos;
+						}
+					} else if (delta.x < 0 && delta.y >= 0) { // Top, Left
+						eX0 = pos0.x + this.collider2D.bounds.size.x / 2;
+						eY0 = pos0.y - this.collider2D.bounds.size.y / 2;
+						eX1 = pos1.x + this.collider2D.bounds.size.x / 2;
+						eY1 = pos1.y - this.collider2D.bounds.size.y / 2;
+						eX2 = thatP.x - that.collider2D.bounds.size.x / 2 ;
+						eY2 = thatP.y + that.collider2D.bounds.size.y / 2 ;
+
+						if (Mathf.Abs(eY1 - eY2) <= 0.1) {// land on top
+							float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
+							vel.y = 0;
+							acc.y = 0;
+							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist + 0.01f);
+							this.transform.position = pos;
+						}
+						else if (this.gameObject.tag != "Enemy") { // hit the left side
+							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
+							vel.x = 0;
+							acc.x = 0;
+							Vector2 pos = new Vector2(that.transform.position.x - dist-0.1f, this.transform.position.y);
+							this.transform.position = pos;
+						}
 					}
+
+
+					break;
 				}
-
-				else if (delta.x >= 0 && delta.y >= 0) { // Top, Right
-					// Get the edges that we're concerned with
-					eX0 = pos0.x - this.collider2D.bounds.size.x / 2; // prev Left side of object.
-					eY0 = pos0.y - this.collider2D.bounds.size.y / 2; // prev bottom side
-					eX1 = pos1.x - this.collider2D.bounds.size.x / 2; // current right side
-					eY1 = pos1.y - this.collider2D.bounds.size.y / 2; // current bottom side
-					eX2 = thatP.x + that.collider2D.bounds.size.x / 2 ; // other object's right side 
-					eY2 = thatP.y + that.collider2D.bounds.size.y / 2 ; // other object's  top side.
-					if ((Mathf.Abs(eY0 - eY2) <= 0.1)) {// land on top
-						float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
-						vel.y = 0;
-						acc.y = 0;
-						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist + 0.01f);
-						this.transform.position = pos;
-					}
-					else { // hit the right side
-						float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
-						vel.x = 0;
-						acc.x = 0;
-						Vector2 pos = new Vector2(that.transform.position.x + dist + 0.1f, this.transform.position.y);
-						this.transform.position = pos;
-						collOnSide = true;
-					}
-
-				} else if (delta.x >= 0 && delta.y < 0) { // Bottom, Right
-					eX0 = pos0.x - this.collider2D.bounds.size.x / 2;
-					eY0 = pos0.y + this.collider2D.bounds.size.y / 2;
-					eX1 = pos1.x - this.collider2D.bounds.size.x / 2;
-					eY1 = pos1.y + this.collider2D.bounds.size.y / 2;
-					eX2 = thatP.x + that.collider2D.bounds.size.x / 2 ;
-					eY2 = thatP.y - that.collider2D.bounds.size.y / 2 ;
-
-					if ((Mathf.Abs(eY1 - eY2) <= 0.1) && (Mathf.Abs(eX1 - eX2) >= 0.4)) {// hit the bottom
-						float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
-						vel.y = 0;
-						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist - 0.03f);
-						this.transform.position = pos;
-					}
-					else { // hit the right side
-						float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
-						vel.x = 0;
-						acc.x = 0;
-						Vector2 pos = new Vector2(that.transform.position.x + dist + 0.06f, this.transform.position.y);
-						this.transform.position = pos;
-						collOnSide = true;
-					}
-				} else if (delta.x < 0 && delta.y < 0) { // Bottom, Left
-					eX0 = pos0.x + this.collider2D.bounds.size.x / 2;
-					eY0 = pos0.y + this.collider2D.bounds.size.y / 2;
-					eX1 = pos1.x + this.collider2D.bounds.size.x / 2;
-					eY1 = pos1.y + this.collider2D.bounds.size.y / 2;
-					eX2 = thatP.x - that.collider2D.bounds.size.x / 2 ;
-					eY2 = thatP.y - that.collider2D.bounds.size.y / 2 ;
-
-					if ((Mathf.Abs(eY1 - eY2) <= 0.1) && (Mathf.Abs(eX1 - eX2) >= 0.4)) {// hit the bottom
-						float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
-						vel.y = 0;
-						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist - 0.03f);
-						this.transform.position = pos;
-					}
-					else { // hit the left side
-						float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
-						vel.x = 0;
-						acc.x = 0;
-						Vector2 pos = new Vector2(that.transform.position.x - dist - 0.06f, this.transform.position.y);
-						this.transform.position = pos;
-						collOnSide = true;
-					}
-				} else if (delta.x < 0 && delta.y >= 0) { // Top, Left
-					eX0 = pos0.x + this.collider2D.bounds.size.x / 2;
-					eY0 = pos0.y - this.collider2D.bounds.size.y / 2;
-					eX1 = pos1.x + this.collider2D.bounds.size.x / 2;
-					eY1 = pos1.y - this.collider2D.bounds.size.y / 2;
-					eX2 = thatP.x - that.collider2D.bounds.size.x / 2 ;
-					eY2 = thatP.y + that.collider2D.bounds.size.y / 2 ;
-
-					if (Mathf.Abs(eY1 - eY2) <= 0.1) {// land on top
-						float dist = this.collider2D.bounds.size.y/2 + that.collider2D.bounds.size.y/2;
-						vel.y = 0;
-						acc.y = 0;
-						Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist + 0.01f);
-						this.transform.position = pos;
-					}
-					else { // hit the left side
-						float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
-						vel.x = 0;
-						acc.x = 0;
-						Vector2 pos = new Vector2(that.transform.position.x - dist-0.1f, this.transform.position.y);
-						this.transform.position = pos;
-						collOnSide = true;
-					}
-				}
-
 
 				break;
 			}
-
-			break;
+		}
+		else if ((this.gameObject.tag == "Block_item") && (!blockhit)){
+			thatP = that.transform.position;
+			if ((thatP.x <= this.transform.position.x + this.collider2D.bounds.size.x/2 ) &&
+			    (thatP.x >= this.transform.position.x - this.collider2D.bounds.size.x/2 )) { // if the center of this obj is between the x-bounds of that obj
+				if (thatP.y < pos1.y) {
+					blockhit = true;
+					block_anim.SetBool ("BlockHit", blockhit);
+					blockhit = false;
+				}
+			}
 		}
 	}
-
-
+	
+	
 }

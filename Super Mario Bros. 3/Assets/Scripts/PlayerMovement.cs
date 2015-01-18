@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour {
 	public AudioClip JumpSound;
 	public AudioClip TurnSound;
 	public AudioClip RunSound;
+	public AudioClip HitSound;
 	private bool turn = false;
 	private bool run = false;
 	public bool canJump;
@@ -14,6 +15,8 @@ public class PlayerMovement : MonoBehaviour {
 	private Transform is_on_ground;
 	private float timer = 10.0f;
 	private float velAtTakeOff = 0;
+	private bool HitJump = false;
+	private bool Hit = false;
 	// Use this for initialization
 	void Start () {
 		mario_anim = GetComponent<Animator>();
@@ -123,7 +126,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (((Mathf.Abs (GetComponent<PE_Obj2D>().vel.x) < 12.0f) || (GetComponent<PE_Obj2D>().acc.y != 0)) && (audio.clip == RunSound)){
 			audio.Stop();
 		}
-		canJump2 = canJump2 || (Mathf.Abs (GetComponent<PE_Obj2D>().acc.y) < 0.1f);
+		canJump2 = canJump2 || ((Mathf.Abs (GetComponent<PE_Obj2D>().acc.y) < 0.1f) && canJump);
 
 		if (Input.GetButtonDown ("Jump")) {
 			if ((canJump) && (canJump2)){
@@ -140,16 +143,29 @@ public class PlayerMovement : MonoBehaviour {
 				canJump2 = false;
 			}
 		}
+		if (HitJump || Hit) {
+			GetComponent<PE_Obj2D>().vel.y = 15.0f;
+			if (audio.isPlaying) {
+				audio.Stop ();
+			}
+			audio.PlayOneShot (HitSound);
+			// audio.Play();
+			//audio.PlayOneShot(JumpSound, 1.0f);
+			timer = 0;
+			velAtTakeOff = GetComponent<PE_Obj2D>().vel.x;
+			canJump = false;
+			canJump2 = false;
+		}
 		float jumpMultiplier;
 		if (run)
 			jumpMultiplier = 1.0f;
 		else
 			jumpMultiplier = 0;
 		if (!canJump){
-			if (Input.GetButton("Jump")) {
+			if (Input.GetButton("Jump") || HitJump) {
 				// only if you're going upwards and the timer just started can you slow down gravity
 				// the faster you were running at takeoff, the longer you can slow down gravity
-				if ((GetComponent<PE_Obj2D>().vel.y > 0) && (timer < (0.5f + 0.001f * jumpMultiplier * Mathf.Pow (Mathf.Abs (velAtTakeOff), 100)))){
+				if ((GetComponent<PE_Obj2D>().vel.y > 0) && (timer < (0.5f + 0.001f * jumpMultiplier * Mathf.Pow (Mathf.Abs (velAtTakeOff), 10)))){
 					GetComponent<PE_Obj2D>().acc.y = -25.0f;
 				}
 				else { // standard gravity
@@ -176,5 +192,20 @@ public class PlayerMovement : MonoBehaviour {
 			transform.localScale = new Vector3(-1, 1, 1);
 		}
 		timer += Time.deltaTime;
+		HitJump = false;
+		Hit = false;
+	}
+
+	void OnTriggerEnter2D (Collider2D other) {
+		if (other.gameObject.tag == "EnemyTop") {
+			if (Input.GetButton("Jump")) {
+				HitJump = true;
+				Hit = false;
+			}
+			else {
+				HitJump = false;
+				Hit = true;
+			}
+		}
 	}
 }

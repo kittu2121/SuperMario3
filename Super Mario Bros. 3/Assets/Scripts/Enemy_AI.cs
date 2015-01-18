@@ -3,14 +3,12 @@ using System.Collections;
 
 public class Enemy_AI : MonoBehaviour {
 	public LayerMask GroundLayers;
-	private Animator enemy_anim;
 	private Transform is_on_ground;
 	public bool canJump;
 	public bool canJump2;
 	// Use this for initialization
 	void Start () {
-		enemy_anim = GetComponent<Animator>();
-		GetComponent<PE_Obj2D>().vel.x = -1.0f;
+		GetComponent<PE_Obj2D>().vel.x = -5.0f;
 		transform.localScale = new Vector3(-1, 1, 1);
 		is_on_ground = transform.FindChild("IsOnGround");
 	}
@@ -33,7 +31,7 @@ public class Enemy_AI : MonoBehaviour {
 				GetComponent<PE_Obj2D>().vel.y = -20.0f;
 			}
 		}
-		if (!canJump && GetComponent<PE_Obj2D>().acc.y == 0) {
+		if (!canJump2 && GetComponent<PE_Obj2D>().acc.y == 0) {
 			GetComponent<PE_Obj2D>().vel.x = -GetComponent<PE_Obj2D>().vel.x;
 			transform.localScale = new Vector3(Mathf.Sign(GetComponent<PE_Obj2D>().vel.x), 1, 1);
 		}
