@@ -7,7 +7,7 @@ public class PE_Obj2D : MonoBehaviour {
 	public bool			still = false;
 	public PE_Collider2D	coll = PE_Collider2D.aabb;
 	public PE_GravType2D	grav = PE_GravType2D.constant;
-	
+	public GameObject camera;
 	public Vector2		acc = Vector2.zero;
 
 	public Vector2		vel = Vector2.zero;
@@ -101,7 +101,7 @@ public class PE_Obj2D : MonoBehaviour {
 							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist + 0.01f);
 							this.transform.position = pos;
 						}
-						else if (this.gameObject.tag != "Enemy") { // hit the right side
+						else if ((this.gameObject.tag != "Enemy") && (this.gameObject.tag != "Item")) { // hit the right side
 							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
 							vel.x = 0;
 							acc.x = 0;
@@ -123,7 +123,7 @@ public class PE_Obj2D : MonoBehaviour {
 							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist - 0.03f);
 							this.transform.position = pos;
 						}
-						else if (this.gameObject.tag != "Enemy") { // hit the right side
+						else if ((this.gameObject.tag != "Enemy") && (this.gameObject.tag != "Item")) { // hit the right side
 							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
 							vel.x = 0;
 							acc.x = 0;
@@ -144,7 +144,7 @@ public class PE_Obj2D : MonoBehaviour {
 							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y - dist - 0.03f);
 							this.transform.position = pos;
 						}
-						else if (this.gameObject.tag != "Enemy") { // hit the left side
+						else if ((this.gameObject.tag != "Enemy") && (this.gameObject.tag != "Item")) { // hit the left side
 							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
 							vel.x = 0;
 							acc.x = 0;
@@ -166,7 +166,7 @@ public class PE_Obj2D : MonoBehaviour {
 							Vector2 pos = new Vector2(this.transform.position.x, that.transform.position.y + dist + 0.01f);
 							this.transform.position = pos;
 						}
-						else if (this.gameObject.tag != "Enemy") { // hit the left side
+						else if ((this.gameObject.tag != "Enemy") && (this.gameObject.tag != "Item")){ // hit the left side
 							float dist = this.collider2D.bounds.size.x/2 + that.collider2D.bounds.size.x/2;
 							vel.x = 0;
 							acc.x = 0;
@@ -191,6 +191,12 @@ public class PE_Obj2D : MonoBehaviour {
 					block_anim.SetBool ("BlockHit", blockhit);
 					blockhit = false;
 				}
+			}
+		}
+		if ((this.gameObject.tag == "Player") && (that.gameObject.tag == "Item")) {
+			camera = GameObject.Find ("Main Camera");
+			if (that.gameObject.GetComponent<ItemBehavior>().mushroom) {
+				camera.GetComponent<Health>().item_number = 1;
 			}
 		}
 	}

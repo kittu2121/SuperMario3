@@ -42,7 +42,7 @@ TextureImporter:
     21300074: NES - Super Mario Bros 3 - Miscellaneous_37
     21300076: NES - Super Mario Bros 3 - Miscellaneous_38
     21300078: NES - Super Mario Bros 3 - Miscellaneous_39
-    21300080: NES - Super Mario Bros 3 - Miscellaneous_40
+    21300080: Mushroom
     21300082: NES - Super Mario Bros 3 - Miscellaneous_41
     21300084: NES - Super Mario Bros 3 - Miscellaneous_42
     21300086: NES - Super Mario Bros 3 - Miscellaneous_43
@@ -564,7 +564,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: NES - Super Mario Bros 3 - Miscellaneous_40
+    - name: Mushroom
       rect:
         serializedVersion: 2
         x: 156

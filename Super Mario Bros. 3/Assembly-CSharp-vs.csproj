@@ -50,12 +50,15 @@
      <Compile Include="Assets\Scripts\Enemy_AI.cs" />
      <Compile Include="Assets\Scripts\Enemy_Death.cs" />
      <Compile Include="Assets\Scripts\Enemy_Hit.cs" />
+     <Compile Include="Assets\Scripts\Health.cs" />
+     <Compile Include="Assets\Scripts\ItemBehavior.cs" />
      <Compile Include="Assets\Scripts\ManagerScript.cs" />
      <Compile Include="Assets\Scripts\PE_Obj.cs" />
      <Compile Include="Assets\Scripts\PE_Obj2D.cs" />
      <Compile Include="Assets\Scripts\PhysEngine.cs" />
      <Compile Include="Assets\Scripts\PhysEngine2D.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+     <Compile Include="Assets\Stomp.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

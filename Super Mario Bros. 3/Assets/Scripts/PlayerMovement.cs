@@ -7,20 +7,30 @@ public class PlayerMovement : MonoBehaviour {
 	public AudioClip TurnSound;
 	public AudioClip RunSound;
 	public AudioClip HitSound;
-	private bool turn = false;
-	private bool run = false;
 	public bool canJump;
 	public bool canJump2;
 	private Animator mario_anim;
 	private Transform is_on_ground;
 	private float timer = 10.0f;
 	private float velAtTakeOff = 0;
-	private bool HitJump = false;
-	private bool Hit = false;
+	private float normalHeight = 0;
+	public bool HitJump = false;
+	public bool Hit = false;
+	private bool turn = false;
+	private bool run = false;
+	public bool big = false;
+	public BoxCollider2D coll;
+	private GameObject camera;
+	void Awake () {
+
+	}
 	// Use this for initialization
 	void Start () {
 		mario_anim = GetComponent<Animator>();
 		is_on_ground = transform.FindChild("IsOnGround");
+		camera = GameObject.Find ("Main Camera");
+		coll = this.transform.GetComponent<BoxCollider2D>() as BoxCollider2D;
+		normalHeight = coll.size.y;
 	}
 	// Update is called once per frame
 	void Update () {
@@ -32,7 +42,15 @@ public class PlayerMovement : MonoBehaviour {
 		canJump = Physics2D.OverlapArea(point1, point2, GroundLayers, 0, 0);
 		// next bool needed so that you can't jump off walls
 		canJump2 = Physics2D.OverlapPoint(is_on_ground.position, GroundLayers);
-
+		if ((Input.GetAxis ("Vertical") == -1) && big &&
+		    ((Input.GetButton ("Left") && Input.GetButton ("Right")) || ( !Input.GetButton ("Left") && !Input.GetButton ("Right")))) {
+			mario_anim.SetBool("Crouch",true);
+			coll.size = new Vector2(coll.size.x, normalHeight*0.67f);
+		}
+		else {
+			mario_anim.SetBool("Crouch",false);
+			coll.size = new Vector2(coll.size.x, normalHeight);
+		}
 		if (Input.GetButton ("Run")) {
 			run = true;
 		}
@@ -58,7 +76,7 @@ public class PlayerMovement : MonoBehaviour {
 			}
 			else {
 				turn = false;
-				GetComponent<PE_Obj2D>().acc.x = 10.0f;
+				GetComponent<PE_Obj2D>().acc.x = 7.0f;
 			}
 			mario_anim.SetBool ("Turn", turn);
 		}
@@ -71,7 +89,7 @@ public class PlayerMovement : MonoBehaviour {
 			}
 			else {
 				turn = false;
-				GetComponent<PE_Obj2D>().acc.x = -10.0f;
+				GetComponent<PE_Obj2D>().acc.x = -7.0f;
 			}
 			mario_anim.SetBool ("Turn", turn);
 		}
@@ -194,18 +212,5 @@ public class PlayerMovement : MonoBehaviour {
 		timer += Time.deltaTime;
 		HitJump = false;
 		Hit = false;
-	}
-
-	void OnTriggerEnter2D (Collider2D other) {
-		if (other.gameObject.tag == "EnemyTop") {
-			if (Input.GetButton("Jump")) {
-				HitJump = true;
-				Hit = false;
-			}
-			else {
-				HitJump = false;
-				Hit = true;
-			}
-		}
 	}
 }
