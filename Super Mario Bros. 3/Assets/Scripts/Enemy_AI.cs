@@ -8,7 +8,7 @@ public class Enemy_AI : MonoBehaviour {
 	public bool canJump2;
 	// Use this for initialization
 	void Start () {
-		GetComponent<PE_Obj2D>().vel.x = -5.0f;
+		GetComponent<PE_Obj2D>().vel.x = -2.0f;
 		transform.localScale = new Vector3(-1, 1, 1);
 		is_on_ground = transform.FindChild("IsOnGround");
 	}

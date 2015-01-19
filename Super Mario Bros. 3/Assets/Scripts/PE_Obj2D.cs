@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 
 
@@ -175,6 +176,51 @@ public class PE_Obj2D : MonoBehaviour {
 						}
 					}
 
+
+					break;
+				case PE_Collider2D.incline:
+
+
+					float angle = 0;
+					Vector3 axis = Vector3.zero;
+
+					that.transform.rotation.ToAngleAxis(out angle, out axis);
+					double angleRad = (Math.PI * angle) / 180.0;
+
+					//positive slope case
+					if (angle > 90.0f) {
+						//aabb's bottom right corner
+
+						// because turning involves scale, we need this little hack for eX1
+						if (this.transform.lossyScale.x > 0) {
+							eX1 = pos1.x + this.transform.lossyScale.x / 2;
+						} else {
+							eX1 = pos1.x - this.transform.lossyScale.x / 2;
+						}
+						eY1 = pos1.y - this.transform.lossyScale.y / 2;
+						
+						//construct the equation of the incline using a point on the incline.
+						//  Slope will be tan(angle)
+						float slopeHeight = that.transform.lossyScale.x / 2 ;
+						float slopeY = (slopeHeight * (float)Math.Sin(angleRad)) + that.transform.position.y;
+						float slopeX = (slopeHeight * (float)Math.Cos(angleRad)) + that.transform.position.x;
+						float slopeM = (float)Math.Tan(angleRad - (Math.PI / 2));
+
+
+
+						//B = Y - mX
+						float slopeB = slopeY - (slopeM * slopeX);
+
+
+						float dist = (slopeM * eX1) + slopeB - eY1 + 0.01f;
+						//calculate new Y position = mX + B
+						Vector2 pos = new Vector2(this.transform.position.x, this.transform.position.y + dist);
+						// Vector2 pos = new Vector2(slopeX, slopeY);
+
+						this.transform.position = pos;
+						vel.y = 0;
+						acc.y = 0;
+					}
 
 					break;
 				}

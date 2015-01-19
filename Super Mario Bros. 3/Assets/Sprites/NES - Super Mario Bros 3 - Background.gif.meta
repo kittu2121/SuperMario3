@@ -216,10 +216,17 @@ TextureImporter:
     21300422: NES - Super Mario Bros 3 - Background_211
     21300424: NES - Super Mario Bros 3 - Background_212
     21300426: NES - Super Mario Bros 3 - Background_213
+    21300428: NES - Super Mario Bros 3 - Background_7
+    21300430: NES - Super Mario Bros 3 - Background_8
+    21300432: NES - Super Mario Bros 3 - Background_9
+    21300434: NES - Super Mario Bros 3 - Background_10
+    21300436: NES - Super Mario Bros 3 - Background_11
+    21300438: NES - Super Mario Bros 3 - Background_181
+    21300440: NES - Super Mario Bros 3 - Background_214
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -239,7 +246,7 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: 0
-    aniso: 16
+    aniso: 1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -327,7 +334,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Coin_1
+    - name: NES - Super Mario Bros 3 - Background_7
       rect:
         serializedVersion: 2
         x: 230
@@ -337,37 +344,37 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Coin_2
+    - name: NES - Super Mario Bros 3 - Background_8
       rect:
         serializedVersion: 2
-        x: 246
+        x: 248
         y: 807
-        width: 14
+        width: 10
         height: 16
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Coin_3
+    - name: NES - Super Mario Bros 3 - Background_9
       rect:
         serializedVersion: 2
-        x: 258
+        x: 262
         y: 807
-        width: 14
+        width: 6
         height: 16
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Coin_4
+    - name: NES - Super Mario Bros 3 - Background_10
       rect:
         serializedVersion: 2
-        x: 270
+        x: 272
         y: 807
-        width: 14
+        width: 10
         height: 16
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Coin_5
+    - name: NES - Super Mario Bros 3 - Background_11
       rect:
         serializedVersion: 2
         x: 286
@@ -510,9 +517,9 @@ TextureImporter:
     - name: NES - Super Mario Bros 3 - Background_25
       rect:
         serializedVersion: 2
-        x: 345
+        x: 367
         y: 618
-        width: 73
+        width: 51
         height: 55
       alignment: 0
       pivot: {x: .5, y: .5}
@@ -2067,7 +2074,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Ground
+    - name: NES - Super Mario Bros 3 - Background_181
       rect:
         serializedVersion: 2
         x: 3
@@ -2394,6 +2401,16 @@ TextureImporter:
         y: 9
         width: 12
         height: 10
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: NES - Super Mario Bros 3 - Background_214
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 618
+        width: 22
+        height: 29
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

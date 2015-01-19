@@ -42,3 +42,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 Super Mario Bros. 3/Temp/UnityLockfile
+Super Mario Bros. 3/Temp
+Super Mario Bros. 3/Library
+*.csproj
+*.pidb
+*.unityproj
+*.sln
+*.userprefs

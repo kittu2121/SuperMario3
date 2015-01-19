@@ -12,6 +12,9 @@ public class Enemy_Hit : MonoBehaviour {
 			transform.GetComponent<PE_Obj2D>().vel.x = -transform.GetComponent<PE_Obj2D>().vel.x;
 			transform.localScale = new Vector3(Mathf.Sign(transform.GetComponent<PE_Obj2D>().vel.x), 1, 1);
 		}
+		else {
+			
+		}
 	}
 	// Update is called once per frame
 	void Update () {

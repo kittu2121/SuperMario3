@@ -9,7 +9,8 @@ public enum PE_GravType2D {
 }
 
 public enum PE_Collider2D {
-	aabb
+	aabb,
+	incline
 }
 
 public class PhysEngine2D : MonoBehaviour {
