@@ -22,7 +22,8 @@ public class PlayerMovement : MonoBehaviour {
 	public BoxCollider2D coll;
 	private GameObject camera;
 	void Awake () {
-
+		//tell the camera to follow this character
+		CameraFollow.character = this.gameObject;
 	}
 	// Use this for initialization
 	void Start () {
